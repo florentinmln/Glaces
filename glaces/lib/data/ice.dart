@@ -1,6 +1,6 @@
-class IceCream {
+class Ice {
   String name;
   int quantity;
 
-  IceCream(this.name, this.quantity);
+  Ice(this.name, this.quantity);
 }
