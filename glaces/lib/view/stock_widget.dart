@@ -1,42 +1,131 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:glaces/view/ice_cream_widget.dart';
 import '../repository/stock_repository.dart';
 
-class StockWidget extends StatelessWidget {
+class StockWidget extends StatefulWidget {
   const StockWidget({super.key});
 
   @override
+  State<StockWidget> createState() => _StockWidgetState();
+}
+
+enum RadioType { fillColor, backgroundColor, side, innerRadius }
+
+class _StockWidgetState extends State<StockWidget> {
+  bool onlyMissingIcecream = false;
+  var _character ;
+
+  @override
   Widget build(BuildContext context) {
-    bool onlyMissingIcecream = true;
+
     final stockRepository = GetIt.instance<StockRepository>();
     final icecream = onlyMissingIcecream
         ? stockRepository.icecream
-            .where((ice) => ice.quantity == 0)
-            .toList()
+        .where((ice) => ice.quantity == 0)
+        .toList()
         : stockRepository.icecream;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Ice cream")
-      ),
-      body: Column(children: [
-        Row(children: [
-          Checkbox(value: onlyMissingIcecream,
+        appBar: AppBar(
+            title: const Text("Ice cream")
+        ),
+        body: Column(children: [
+          Row(
+            children: [
+              const SizedBox(width: 16),
+              Expanded(child :
+                Text("Scoops Flavours")
+              ),
+              const SizedBox(width: 16),
+              Text("Maximum : 5"),
+              const SizedBox(width: 16),
+            ],),
+          Row(children: [
+            Checkbox(
+              value: onlyMissingIcecream,
               onChanged: (bool? value) {
-                onlyMissingIcecream = value!;
+                setState(() {
+                  onlyMissingIcecream = value!;
+                });
               },
+            ),
+            const SizedBox(width: 16),
+            const Expanded(child: Text("Show only missing products"))
+          ]),
+          const SizedBox(height: 16),
+          Expanded(child:
+                ListView.builder(
+                  itemCount: icecream.length,
+                  itemBuilder: (BuildContext contex, int index){
+                    return IceCreamWidget(ice: icecream[index],
+                    shiftQuantity: (shift) {
+                      setState(() {
+                        icecream[index].quantity += shift;
+                      });
+                    });
+                  }
+                ),
           ),
-          const SizedBox(width: 16),
-          const Expanded(child: Text("Show only missing products"))
-        ]),
-        const SizedBox(height: 16),
-        Expanded(
-            child: ListView.builder(
-                itemCount: icecream.length,
-                itemBuilder: (BuildContext contex, int index){
-                  return IceCreamWidget(ice: icecream[index]);
-                }))
+          Row(children: [
+            Text("Cone or Cup"),
+            const SizedBox(width: 16),
+            const SizedBox(width: 16),
+            const SizedBox(width: 16),
 
-      ]));
+          ],),
+          RadioGroup<int>(
+            groupValue: _character,
+            onChanged: (int? value) {
+              setState(() {
+                _character = value;
+              });
+            },
+          child: const Column(
+          children: [
+          ListTile(
+            title: Text('Cone'),
+            leading: Radio<int>(value: 1),
+          ),
+          ListTile(
+            title: Text('Cup'),
+            leading: Radio<int>(value: 2),
+          ),],
+          ),
+          ),
+          Row(children: [
+            Text("remplir le blanc"),
+            const SizedBox(width: 16),
+            const SizedBox(width: 16),
+            const SizedBox(width: 16),
+
+          ],),
+          Row(children: [
+            Text("remplir le blanc"),
+            const SizedBox(width: 16),
+            const SizedBox(width: 16),
+            const SizedBox(width: 16),
+
+          ],),
+          Row(children: [
+            Text("remplir le blanc"),
+            const SizedBox(width: 16),
+            const SizedBox(width: 16),
+            const SizedBox(width: 16),
+
+          ],),
+          Row(children: [
+            Text("remplir le blanc"),
+            const SizedBox(width: 16),
+            const SizedBox(width: 16),
+            const SizedBox(width: 16),
+
+          ],),
+
+
+        ]));
   }
+
+
 }
