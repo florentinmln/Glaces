@@ -16,12 +16,17 @@ enum RadioType { fillColor, backgroundColor, side, innerRadius }
 
 class _StockWidgetState extends State<StockWidget> {
   bool onlyMissingIcecream = false;
-  var _character ;
+  bool whippedCream = false;
+  bool hazelnuts = false;
+  var _price;
+  double price = 0.0 ;
 
   @override
   Widget build(BuildContext context) {
 
     final stockRepository = GetIt.instance<StockRepository>();
+    final whippedCream = false;
+    final hazelnuts = false;
     final icecream = onlyMissingIcecream
         ? stockRepository.icecream
         .where((ice) => ice.quantity == 0)
@@ -75,41 +80,65 @@ class _StockWidgetState extends State<StockWidget> {
             const SizedBox(width: 16),
 
           ],),
-          RadioGroup<int>(
-            groupValue: _character,
-            onChanged: (int? value) {
+          RadioGroup<double>(
+            groupValue: _price,
+            onChanged: (double? value) {
               setState(() {
-                _character = value;
+                price = 1.0 + price;
               });
             },
           child: const Column(
           children: [
           ListTile(
             title: Text('Cone'),
-            leading: Radio<int>(value: 1),
+            leading: Radio<double>(value: 1),
           ),
+          Text("1€"),
           ListTile(
             title: Text('Cup'),
-            leading: Radio<int>(value: 2),
-          ),],
+            leading: Radio<double>(value: 0),
+          ),
+            Text("free"),],
           ),
           ),
           Row(children: [
-            Text("remplir le blanc"),
-            const SizedBox(width: 16),
-            const SizedBox(width: 16),
-            const SizedBox(width: 16),
-
+            Text("Extras"),
           ],),
           Row(children: [
-            Text("remplir le blanc"),
+            Checkbox(
+              value: whippedCream,
+              onChanged: (bool? value) {
+                setState(() {
+                  price = price + 0.95;
+                });
+              },
+            ),
             const SizedBox(width: 16),
+            const Expanded(child: Text("Whipped cream")),
+            Text("0.95€"),
             const SizedBox(width: 16),
+          ]),
+          Row(children: [
+            Checkbox(
+              value: hazelnuts,
+              onChanged: (bool? value) {
+                setState(() {
+                  price = 1.3 + price;
+                });
+              },
+            ),
             const SizedBox(width: 16),
+            const Expanded(child: Text("Hazelnuts")),
+            Text("1.30€"),
+            const SizedBox(width: 16),
+          ]),
 
+
+          Row(children: [
+            Text("Price"),
           ],),
           Row(children: [
-            Text("remplir le blanc"),
+            Text(price.toString()),
             const SizedBox(width: 16),
             const SizedBox(width: 16),
             const SizedBox(width: 16),
