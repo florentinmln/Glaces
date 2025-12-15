@@ -25,8 +25,6 @@ class _StockWidgetState extends State<StockWidget> {
   Widget build(BuildContext context) {
 
     final stockRepository = GetIt.instance<StockRepository>();
-    final whippedCream = false;
-    final hazelnuts = false;
     final icecream = onlyMissingIcecream
         ? stockRepository.icecream
         .where((ice) => ice.quantity == 0)
@@ -84,19 +82,24 @@ class _StockWidgetState extends State<StockWidget> {
             groupValue: _price,
             onChanged: (double? value) {
               setState(() {
-                price = 1.0 + price;
+                _price = value;
+                if(value == 1.0) {
+                  price = 1.0 + price;
+                }else{
+                  price = price -1;
+                }
               });
             },
           child: const Column(
           children: [
           ListTile(
             title: Text('Cone'),
-            leading: Radio<double>(value: 1),
+            leading: Radio<double>(value: 1.0),
           ),
           Text("1€"),
           ListTile(
             title: Text('Cup'),
-            leading: Radio<double>(value: 0),
+            leading: Radio<double>(value: 0.0),
           ),
             Text("free"),],
           ),
@@ -109,7 +112,12 @@ class _StockWidgetState extends State<StockWidget> {
               value: whippedCream,
               onChanged: (bool? value) {
                 setState(() {
-                  price = price + 0.95;
+                  whippedCream = value!;
+                  if (value == true) {
+                    price = price + 0.95;
+                  }else{
+                    price = price - 0.95;
+                  }
                 });
               },
             ),
@@ -123,7 +131,12 @@ class _StockWidgetState extends State<StockWidget> {
               value: hazelnuts,
               onChanged: (bool? value) {
                 setState(() {
-                  price = 1.3 + price;
+                  hazelnuts = value!;
+                  if (value == true) {
+                    price = price + 1.30;
+                  }else{
+                    price = price - 1.30;
+                  }
                 });
               },
             ),
@@ -145,11 +158,13 @@ class _StockWidgetState extends State<StockWidget> {
 
           ],),
           Row(children: [
-            Text("remplir le blanc"),
-            const SizedBox(width: 16),
-            const SizedBox(width: 16),
-            const SizedBox(width: 16),
-
+            Text("   "),
+          ],),
+          Row(children: [
+            Text("   "),
+          ],),
+          Row(children: [
+            Text("   "),
           ],),
 
 
