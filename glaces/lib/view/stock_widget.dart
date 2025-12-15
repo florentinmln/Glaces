@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -20,6 +21,8 @@ class _StockWidgetState extends State<StockWidget> {
   bool hazelnuts = false;
   var _price;
   double price = 0.0 ;
+  int quantityCream = 0;
+  String maximum = "Maximum 5";
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +45,7 @@ class _StockWidgetState extends State<StockWidget> {
                 Text("Scoops Flavours")
               ),
               const SizedBox(width: 16),
-              Text("Maximum : 5"),
+              Text(maximum),
               const SizedBox(width: 16),
             ],),
           Row(children: [
@@ -65,7 +68,16 @@ class _StockWidgetState extends State<StockWidget> {
                     return IceCreamWidget(ice: icecream[index],
                     shiftQuantity: (shift) {
                       setState(() {
-                        icecream[index].quantity += shift;
+                        quantityCream = 0;
+                        for (int i = 0; i < icecream.length; i++){
+                          quantityCream += icecream[i].quantity;
+                        }
+                        if (shift > 0 && quantityCream >4){
+                          maximum = "too many scoop selected";
+                        }else {
+                          icecream[index].quantity += shift;
+                          maximum = "Maximum 5";
+                        }
                       });
                     });
                   }
